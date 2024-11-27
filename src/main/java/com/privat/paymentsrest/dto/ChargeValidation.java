@@ -1,6 +1,5 @@
 package com.privat.paymentsrest.dto;
 
-
 public class ChargeValidation {
     private boolean needToCharge;
 

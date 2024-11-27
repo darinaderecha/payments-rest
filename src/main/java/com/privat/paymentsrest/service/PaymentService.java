@@ -2,6 +2,8 @@ package com.privat.paymentsrest.service;
 
 import com.privat.paymentsrest.dto.PaymentCreateDto;
 import com.privat.paymentsrest.dto.PaymentDto;
+import com.privat.paymentsrest.exception.PaymentCreationException;
+import com.privat.paymentsrest.exception.PaymentFetchException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -12,14 +14,13 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
-
 @Service
 public class PaymentService {
 
     private final RestTemplate restTemplate;
 
     @Value("${dao.service.url}")
-    private String serviceBaseUrl;
+    public String serviceBaseUrl;
 
     public PaymentService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -33,10 +34,10 @@ public class PaymentService {
             if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             } else {
-                throw new RuntimeException("Failed to create payment: " + response.getStatusCode());
+                throw new PaymentCreationException( "Failed to create payment: " + response.getStatusCode());
             }
         } catch (HttpClientErrorException e) {
-            throw new RuntimeException("Error occurred while calling payment API: " + e.getResponseBodyAsString(), e);
+            throw new PaymentCreationException("Error occurred while calling payment API: " + e.getResponseBodyAsString(), e);
         }
     }
 
@@ -54,11 +55,10 @@ public class PaymentService {
             if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             } else {
-                throw new RuntimeException("Failed to fetch payments: " + response.getStatusCode());
+                throw new PaymentFetchException("Failed to fetch payments: " + response.getStatusCode());
             }
         } catch (HttpClientErrorException e) {
-            throw new RuntimeException("Error occurred while calling payment API: " + e.getResponseBodyAsString(), e);
+            throw new PaymentFetchException("Error occurred while calling payment API: " + e.getResponseBodyAsString(), e);
         }
     }
-
 }

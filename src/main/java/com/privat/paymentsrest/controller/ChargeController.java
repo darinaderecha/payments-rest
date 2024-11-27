@@ -1,6 +1,5 @@
 package com.privat.paymentsrest.controller;
 
-import com.privat.paymentsrest.dto.ChargeCreateDto;
 import com.privat.paymentsrest.dto.ChargeDto;
 import com.privat.paymentsrest.dto.ChargeValidation;
 import com.privat.paymentsrest.service.ChargeService;
@@ -37,12 +36,9 @@ public class ChargeController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(chargeValidation);
     }
 
-
     @DeleteMapping("/{chargeId}")
     public ResponseEntity<Void> reverseCharge(@PathVariable("chargeId") UUID chargeId) {
         chargeService.reverseCharge(chargeId);
         return ResponseEntity.noContent().build();
     }
 }
-
-

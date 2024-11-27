@@ -24,7 +24,7 @@ public class ChargeService {
 
     private final RestTemplate restTemplate;
     @Value("${dao.service.url}")
-    private String serviceBaseUrl;
+    public String serviceBaseUrl;
     private static final Logger logger = LoggerFactory.getLogger(ChargeService.class);
 
     private String controller = "/v1/charges-dao";
@@ -47,7 +47,7 @@ public class ChargeService {
         List<ChargeDto> charges = getChargesByPaymentId(paymentId);
 
         if ( charges != null && !charges.isEmpty()) {
-            ChargeDto latestCharge = charges.getLast();
+            ChargeDto latestCharge = charges.getFirst();
             LocalDateTime lastChargeTime = latestCharge.chargeTime();
             if (isChargeTerminated(payment.withdrawalPeriod(), lastChargeTime)) {
                 return Boolean.TRUE;
@@ -62,7 +62,6 @@ public class ChargeService {
 
     }
 
-
     public void reverseCharge(UUID chargeId) {
         String endpoint = serviceBaseUrl + controller + chargeId;
         try {
@@ -76,7 +75,6 @@ public class ChargeService {
             throw new RuntimeException("Failed to reverse charge with ID: " + chargeId + ". Error: " + e.getResponseBodyAsString(), e);
         }
     }
-
 
     public List<ChargeDto> getChargesByPaymentId(UUID paymentId) {
         String endpoint = serviceBaseUrl + controller + "/payment/" + paymentId;
@@ -106,4 +104,3 @@ public class ChargeService {
     }
 
 }
-

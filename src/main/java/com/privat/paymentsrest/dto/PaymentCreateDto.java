@@ -7,7 +7,6 @@ import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-
 public record PaymentCreateDto(@NotBlank(message = "Card id is mandatory")
                                UUID card,
                                @NotBlank(message = "IBAN is mandatory")

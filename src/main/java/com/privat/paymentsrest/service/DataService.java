@@ -19,7 +19,7 @@ public class DataService {
     private final RestTemplate restTemplate;
 
     @Value("${dao.service.url}")
-    private String serviceBaseUrl;
+    public String serviceBaseUrl;
 
     public DataService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
