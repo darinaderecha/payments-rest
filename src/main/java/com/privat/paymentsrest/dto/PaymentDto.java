@@ -11,13 +11,13 @@ public record PaymentDto(@NotNull(message = "Regular payment id is mandatory")
                          UUID id,
                          @NotBlank(message = "Card id is mandatory")
                          UUID card,
-                         @NotBlank(message = "IBAN is mandatory")
+                         @NotBlank(message = "iban is mandatory")
                          @Size(min = 15, max = 34, message = "input size should be more than 14 and less than 34 ")
-                         String IBAN,
+                         String iban,
                          @Size(min = 5, max = 9, message = "input size should be more than 4 and less than 10 ")
-                         String MFO,
+                         String mfo,
                          @Size(min = 5, max = 12 , message = "input size should be more than 4 and less than 13 ")
-                         String ZKPO,
+                         String zkpo,
                          @NotBlank(message = "Receiver name is mandatory")
                          String receiverName,
                          @NotNull(message = "Amount is mandatory")

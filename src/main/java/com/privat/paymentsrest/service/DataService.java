@@ -53,7 +53,7 @@ public class DataService {
 
             return response.getBody();
         } catch (HttpClientErrorException e) {
-            throw new RuntimeException("Failed to fetch payments for ZKPO: " + zkpo + ". Error: " + e.getResponseBodyAsString(), e);
+            throw new RuntimeException("Failed to fetch payments for zkpo: " + zkpo + ". Error: " + e.getResponseBodyAsString(), e);
         }
     }
 

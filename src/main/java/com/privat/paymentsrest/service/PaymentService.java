@@ -27,7 +27,7 @@ public class PaymentService {
     }
 
     public PaymentDto createPayment(PaymentCreateDto paymentCreateDto) {
-        String endpoint = serviceBaseUrl + "/v1/payments-dao/";
+        String endpoint = serviceBaseUrl + "/v1/payments-dao";
 
         try {
             ResponseEntity<PaymentDto> response = restTemplate.postForEntity(endpoint, paymentCreateDto, PaymentDto.class);

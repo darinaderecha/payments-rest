@@ -52,9 +52,9 @@ class PaymentServiceTest {
         PaymentDto mockResponse = new PaymentDto(
                 UUID.randomUUID(),
                 paymentCreateDto.card(),
-                paymentCreateDto.IBAN(),
-                paymentCreateDto.MFO(),
-                paymentCreateDto.ZKPO(),
+                paymentCreateDto.iban(),
+                paymentCreateDto.mfo(),
+                paymentCreateDto.zkpo(),
                 paymentCreateDto.receiverName(),
                 paymentCreateDto.amount(),
                 paymentCreateDto.withdrawalPeriod()

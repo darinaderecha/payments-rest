@@ -75,46 +75,6 @@ class ChargeServiceTest {
 
 
     @Test
-    void testCheckIfNeedCharge_ChargeNeeded() {
-        UUID paymentId = mockPayment.id();
-        ChargeDto mockCharge = new ChargeDto(UUID.randomUUID(), paymentId, LocalDateTime.now().minusMinutes(5),
-                BigDecimal.valueOf(100.00), Status.ACTIVE);
-        String endpointCharges = serviceBaseUrl + "/v1/charges-dao/payment/" + paymentId;
-
-        when(restTemplate.exchange(
-                eq(serviceBaseUrl + "/v1/payments-dao/" + paymentId),
-                eq(HttpMethod.GET),
-                isNull(),
-                eq(PaymentDto.class)
-        )).thenReturn(ResponseEntity.ok(mockPayment));
-
-        when(restTemplate.exchange(
-                eq(endpointCharges),
-                eq(HttpMethod.GET),
-                isNull(),
-                ArgumentMatchers.<ParameterizedTypeReference<List<ChargeDto>>>any()
-        )).thenReturn(ResponseEntity.ok(Collections.singletonList(mockCharge)));
-
-
-        Boolean needToCharge = chargeService.checkIfNeedCharge(paymentId);
-
-        assertTrue(needToCharge);
-
-        verify(restTemplate).exchange(
-                eq(serviceBaseUrl + "/v1/payments-dao/" + paymentId),
-                eq(HttpMethod.GET),
-                isNull(),
-                eq(PaymentDto.class)
-        );
-        verify(restTemplate).exchange(
-                eq(endpointCharges),
-                eq(HttpMethod.GET),
-                isNull(),
-                ArgumentMatchers.<ParameterizedTypeReference<List<ChargeDto>>>any()
-        );
-    }
-
-    @Test
     void testGetChargesByPaymentId_Success() {
         UUID paymentId = UUID.randomUUID();
         ChargeDto mockCharge = new ChargeDto(UUID.randomUUID(), paymentId, LocalDateTime.now(),

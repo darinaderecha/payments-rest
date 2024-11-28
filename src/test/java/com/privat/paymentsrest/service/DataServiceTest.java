@@ -133,7 +133,7 @@ class DataServiceTest {
         )).thenThrow(new HttpClientErrorException(org.springframework.http.HttpStatus.NOT_FOUND, "No data found"));
 
         Exception exception = assertThrows(RuntimeException.class, () -> dataService.getPaymentsByReceiver(zkpo));
-        assertTrue(exception.getMessage().contains("Failed to fetch payments for ZKPO"));
+        assertTrue(exception.getMessage().contains("Failed to fetch payments for zkpo"));
 
         verify(restTemplate).exchange(
                 eq(endpoint),
