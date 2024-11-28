@@ -58,7 +58,7 @@ public class ChargeService {
     }
 
     private boolean isChargeTerminated(Long minutes, LocalDateTime lastChargeTime) {
-        return minutes > Duration.between(lastChargeTime, LocalDateTime.now()).toMinutes();
+        return minutes < Duration.between(lastChargeTime, LocalDateTime.now()).toMinutes();
 
     }
 
