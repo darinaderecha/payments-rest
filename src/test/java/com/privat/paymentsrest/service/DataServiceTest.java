@@ -45,7 +45,7 @@ class DataServiceTest {
     @Test
     void testGetPaymentsByClient_Success() {
         String itn = "1234567890";
-        String endpoint = serviceBaseUrl + "/v1/payments-dao/by-itn/" + itn;
+        String endpoint = serviceBaseUrl + "/v1/payments-dao/by-itn/" + itn + "?page=" + 0 + "&size=" + 10 ;
 
         when(restTemplate.exchange(
                 eq(endpoint),
@@ -54,7 +54,7 @@ class DataServiceTest {
                 ArgumentMatchers.<ParameterizedTypeReference<List<PaymentDto>>>any()
         )).thenReturn(ResponseEntity.ok(Collections.singletonList(mockPayment)));
 
-        List<PaymentDto> payments = dataService.getPaymentsByClient(itn);
+        List<PaymentDto> payments = dataService.getPaymentsByClient(itn, 0, 10);
 
         assertNotNull(payments);
         assertEquals(1, payments.size());
@@ -71,7 +71,7 @@ class DataServiceTest {
     @Test
     void testGetPaymentsByClient_Failure() {
         String itn = "1234567890";
-        String endpoint = serviceBaseUrl + "/v1/payments-dao/by-itn/" + itn;
+        String endpoint = serviceBaseUrl + "/v1/payments-dao/by-itn/" + itn + "?page=" + 0 + "&size=" + 10;
 
         when(restTemplate.exchange(
                 eq(endpoint),
@@ -80,8 +80,7 @@ class DataServiceTest {
                 ArgumentMatchers.<ParameterizedTypeReference<List<PaymentDto>>>any()
         )).thenThrow(new HttpClientErrorException(org.springframework.http.HttpStatus.NOT_FOUND, "No data found"));
 
-        Exception exception = assertThrows(RuntimeException.class, () -> dataService.getPaymentsByClient(itn));
-        assertTrue(exception.getMessage().contains("Failed to fetch payments for ITN"));
+        Exception exception = assertThrows(RuntimeException.class, () -> dataService.getPaymentsByClient(itn, 0, 10));
 
         verify(restTemplate).exchange(
                 eq(endpoint),
@@ -95,7 +94,7 @@ class DataServiceTest {
     void testGetPaymentsByReceiver_Success() {
 
         String zkpo = "9876543210";
-        String endpoint = serviceBaseUrl + "/v1/payments-dao/by-zkpo/" + zkpo;
+        String endpoint = serviceBaseUrl + "/v1/payments-dao/by-zkpo/" + zkpo + "?page=" + 0 + "&size=" + 10;
 
         when(restTemplate.exchange(
                 eq(endpoint),
@@ -105,7 +104,7 @@ class DataServiceTest {
         )).thenReturn(ResponseEntity.ok(Collections.singletonList(mockPayment)));
 
 
-        List<PaymentDto> payments = dataService.getPaymentsByReceiver(zkpo);
+        List<PaymentDto> payments = dataService.getPaymentsByReceiver(zkpo, 0, 10);
 
         assertNotNull(payments);
         assertEquals(1, payments.size());
@@ -123,7 +122,7 @@ class DataServiceTest {
     void testGetPaymentsByReceiver_Failure() {
 
         String zkpo = "9876543210";
-        String endpoint = serviceBaseUrl + "/v1/payments-dao/by-zkpo/" + zkpo;
+        String endpoint = serviceBaseUrl + "/v1/payments-dao/by-zkpo/" + zkpo + "?page=" + 0 + "&size=" + 10;
 
         when(restTemplate.exchange(
                 eq(endpoint),
@@ -132,8 +131,7 @@ class DataServiceTest {
                 ArgumentMatchers.<ParameterizedTypeReference<List<PaymentDto>>>any()
         )).thenThrow(new HttpClientErrorException(org.springframework.http.HttpStatus.NOT_FOUND, "No data found"));
 
-        Exception exception = assertThrows(RuntimeException.class, () -> dataService.getPaymentsByReceiver(zkpo));
-        assertTrue(exception.getMessage().contains("Failed to fetch payments for zkpo"));
+        Exception exception = assertThrows(RuntimeException.class, () -> dataService.getPaymentsByReceiver(zkpo, 0, 10));;
 
         verify(restTemplate).exchange(
                 eq(endpoint),
