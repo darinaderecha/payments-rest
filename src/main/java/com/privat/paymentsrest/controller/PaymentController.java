@@ -26,8 +26,10 @@ public class PaymentController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<PaymentDto>> getAllPayments() {
-       List<PaymentDto> payments = paymentService.getAll();
+    public ResponseEntity<List<PaymentDto>> getAllPayments(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "100") int size){
+       List<PaymentDto> payments = paymentService.getAll(page, size);
         return ResponseEntity.ok(payments);
     }
 }

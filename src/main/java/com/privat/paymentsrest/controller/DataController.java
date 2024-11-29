@@ -4,10 +4,7 @@ import com.privat.paymentsrest.dto.ChargeDto;
 import com.privat.paymentsrest.dto.PaymentDto;
 import com.privat.paymentsrest.service.DataService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -23,18 +20,22 @@ public class DataController {
     }
 
     @GetMapping("/by-itn/{itn}")
-    public ResponseEntity<List<PaymentDto>> getPaymentsByClient(@PathVariable String itn) {
-        List<PaymentDto> payments = dataService.getPaymentsByClient(itn);
-        if (payments.isEmpty()) {
+    public ResponseEntity<List<PaymentDto>> getPaymentsByClient(@PathVariable String itn,
+                                                                @RequestParam(defaultValue = "0") int page,
+                                                                @RequestParam(defaultValue = "100") int size) {
+        List<PaymentDto> payments = dataService.getPaymentsByClient(itn, page, size);
+        if (payments == null || payments.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(payments);
     }
 
     @GetMapping("/by-zkpo/{zkpo}")
-    public ResponseEntity<List<PaymentDto>> getPaymentsByReceiver(@PathVariable String zkpo) {
-        List<PaymentDto> payments = dataService.getPaymentsByReceiver(zkpo);
-        if (payments.isEmpty()) {
+    public ResponseEntity<List<PaymentDto>> getPaymentsByReceiver(@PathVariable String zkpo,
+                                                                  @RequestParam(defaultValue = "0") int page,
+                                                                  @RequestParam(defaultValue = "100") int size) {
+        List<PaymentDto> payments = dataService.getPaymentsByReceiver(zkpo, page, size);
+        if (payments == null || payments.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(payments);
@@ -43,7 +44,7 @@ public class DataController {
     @GetMapping("/charge-history/{paymentId}")
     public ResponseEntity<List<ChargeDto>> getPaymentHistory(@PathVariable UUID paymentId) {
         List<ChargeDto> charges = dataService.getPaymentHistory(paymentId);
-        if (charges.isEmpty()) {
+        if (charges == null ||charges.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(charges);

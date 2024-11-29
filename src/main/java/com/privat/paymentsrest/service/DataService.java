@@ -2,6 +2,8 @@ package com.privat.paymentsrest.service;
 
 import com.privat.paymentsrest.dto.ChargeDto;
 import com.privat.paymentsrest.dto.PaymentDto;
+import com.privat.paymentsrest.exception.ChargeFetchException;
+import com.privat.paymentsrest.exception.PaymentFetchException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -25,8 +27,8 @@ public class DataService {
         this.restTemplate = restTemplate;
     }
 
-    public List<PaymentDto> getPaymentsByClient(String itn){
-        String endpoint = serviceBaseUrl + "/v1/payments-dao/by-itn/" + itn;
+    public List<PaymentDto> getPaymentsByClient(String itn, int page, int size){
+        String endpoint = serviceBaseUrl + "/v1/payments-dao/by-itn/" + itn + "?page=" + page + "&size=" + size;
         try {
             ResponseEntity<List<PaymentDto>> response = restTemplate.exchange(
                     endpoint,
@@ -37,12 +39,12 @@ public class DataService {
 
             return response.getBody();
         } catch (HttpClientErrorException e) {
-            throw new RuntimeException("Failed to fetch payments for ITN: " + itn + ". Error: " + e.getResponseBodyAsString(), e);
+            throw new PaymentFetchException("Failed to fetch payments for ITN: " + itn + ". Error: " + e.getResponseBodyAsString(), e);
         }
     }
 
-    public List<PaymentDto> getPaymentsByReceiver(String zkpo){
-        String endpoint = serviceBaseUrl + "/v1/payments-dao/by-zkpo/" + zkpo;
+    public List<PaymentDto> getPaymentsByReceiver(String zkpo, int page, int size){
+        String endpoint = serviceBaseUrl + "/v1/payments-dao/by-zkpo/" + zkpo + "?page=" + page + "&size=" + size;
         try {
             ResponseEntity<List<PaymentDto>> response = restTemplate.exchange(
                     endpoint,
@@ -53,7 +55,7 @@ public class DataService {
 
             return response.getBody();
         } catch (HttpClientErrorException e) {
-            throw new RuntimeException("Failed to fetch payments for zkpo: " + zkpo + ". Error: " + e.getResponseBodyAsString(), e);
+            throw new PaymentFetchException("Failed to fetch payments for zkpo: " + zkpo + ". Error: " + e.getResponseBodyAsString(), e);
         }
     }
 
@@ -69,7 +71,7 @@ public class DataService {
 
             return response.getBody();
         } catch (HttpClientErrorException e) {
-            throw new RuntimeException("Failed to fetch payments for paymentId: " +paymentId + ". Error: " + e.getResponseBodyAsString(), e);
+            throw new ChargeFetchException("Failed to fetch payments for paymentId: " +paymentId + ". Error: " + e.getResponseBodyAsString(), e);
         }
     }
 }
