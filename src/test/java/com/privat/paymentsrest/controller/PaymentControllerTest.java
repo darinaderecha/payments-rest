@@ -55,9 +55,9 @@ class PaymentControllerTest {
 
         PaymentDto mockPayment = new PaymentDto(UUID.randomUUID(), UUID.randomUUID(), "UA1234567890", "300335", "1234567890",
                 "Василенко Василь", BigDecimal.valueOf(100.00), 30L);
-        when(paymentService.getAll()).thenReturn(Collections.singletonList(mockPayment));
+        when(paymentService.getAll(0, 5)).thenReturn(Collections.singletonList(mockPayment));
 
-        ResponseEntity<List<PaymentDto>> response = paymentController.getAllPayments();
+        ResponseEntity<List<PaymentDto>> response = paymentController.getAllPayments(0,5);
 
         assertNotNull(response);
         assertEquals(200, response.getStatusCode().value());
@@ -65,21 +65,21 @@ class PaymentControllerTest {
         assertEquals(1, response.getBody().size());
         assertEquals(mockPayment, response.getBody().getFirst());
 
-        verify(paymentService).getAll();
+        verify(paymentService).getAll(0, 5);
     }
 
     @Test
     void testGetAllPayments_NoResults() {
 
-        when(paymentService.getAll()).thenReturn(Collections.emptyList());
+        when(paymentService.getAll(0,5)).thenReturn(Collections.emptyList());
 
-        ResponseEntity<List<PaymentDto>> response = paymentController.getAllPayments();
+        ResponseEntity<List<PaymentDto>> response = paymentController.getAllPayments(0,5);
 
         assertNotNull(response);
         assertEquals(200, response.getStatusCode().value());
         assertNotNull(response.getBody());
         assertTrue(response.getBody().isEmpty());
 
-        verify(paymentService).getAll();
+        verify(paymentService).getAll(0,5);
     }
 }

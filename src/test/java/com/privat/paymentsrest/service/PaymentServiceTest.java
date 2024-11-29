@@ -112,7 +112,7 @@ class PaymentServiceTest {
                 ArgumentMatchers.<ParameterizedTypeReference<List<PaymentDto>>>any()
         )).thenReturn(ResponseEntity.ok(Collections.singletonList(mockPayment)));
 
-        List<PaymentDto> payments = paymentService.getAll();
+        List<PaymentDto> payments = paymentService.getAll(0, 5);
 
         assertNotNull(payments);
         assertEquals(1, payments.size());
@@ -133,10 +133,13 @@ class PaymentServiceTest {
                 eq(HttpMethod.GET),
                 isNull(),
                 ArgumentMatchers.<ParameterizedTypeReference<List<PaymentDto>>>any()
-        )).thenThrow(new HttpClientErrorException(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR, "Server error"));
+        )).thenThrow(new HttpClientErrorException(
+                org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR,
+                "Server error"
+        ));
 
-        Exception exception = assertThrows(PaymentFetchException.class, () -> paymentService.getAll());
-        assertTrue(exception.getMessage().contains("Error occurred while calling payment API"));
+        Exception exception = assertThrows(PaymentFetchException.class, () -> paymentService.getAll(0, 5));
+        assertTrue(exception.getMessage().contains("Error while fetching payments from payments-dao"));
 
         verify(restTemplate).exchange(
                 anyString(),

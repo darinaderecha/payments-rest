@@ -38,9 +38,13 @@ class DataControllerTest {
     @Test
     void testGetPaymentsByClient_WithResults() {
         String itn = "1234567890";
-        when(dataService.getPaymentsByClient(itn)).thenReturn(Collections.singletonList(mockPayment));
+        int page = 0;
+        int size = 100;
 
-        ResponseEntity<List<PaymentDto>> response = dataController.getPaymentsByClient(itn);
+        List<PaymentDto> mockPayments = Collections.singletonList(mockPayment);
+        when(dataService.getPaymentsByClient(itn, page, size)).thenReturn(mockPayments);
+
+        ResponseEntity<List<PaymentDto>> response = dataController.getPaymentsByClient(itn, page, size);
 
         assertNotNull(response);
         assertEquals(200, response.getStatusCode().value());
@@ -48,31 +52,38 @@ class DataControllerTest {
         assertEquals(1, response.getBody().size());
         assertEquals(mockPayment, response.getBody().getFirst());
 
-        verify(dataService).getPaymentsByClient(itn);
+        verify(dataService).getPaymentsByClient(itn, page, size);
     }
+
 
     @Test
     void testGetPaymentsByClient_NoResults() {
-
         String itn = "1234567890";
-        when(dataService.getPaymentsByClient(itn)).thenReturn(Collections.emptyList());
+        int page = 0;
+        int size = 100;
 
-        ResponseEntity<List<PaymentDto>> response = dataController.getPaymentsByClient(itn);
+        when(dataService.getPaymentsByClient(itn, page, size)).thenReturn(Collections.emptyList());
+
+        ResponseEntity<List<PaymentDto>> response = dataController.getPaymentsByClient(itn, page, size);
 
         assertNotNull(response);
         assertEquals(204, response.getStatusCode().value());
         assertNull(response.getBody());
 
-        verify(dataService).getPaymentsByClient(itn);
+        verify(dataService).getPaymentsByClient(itn, page, size);
     }
 
 
     @Test
     void testGetPaymentsByReceiver_WithResults() {
         String zkpo = "9876543210";
-        when(dataService.getPaymentsByReceiver(zkpo)).thenReturn(Collections.singletonList(mockPayment));
+        int page = 0;
+        int size = 100;
 
-        ResponseEntity<List<PaymentDto>> response = dataController.getPaymentsByReceiver(zkpo);
+        List<PaymentDto> mockPayments = Collections.singletonList(mockPayment);
+        when(dataService.getPaymentsByReceiver(zkpo, page, size)).thenReturn(mockPayments);
+
+        ResponseEntity<List<PaymentDto>> response = dataController.getPaymentsByReceiver(zkpo, page, size);
 
         assertNotNull(response);
         assertEquals(200, response.getStatusCode().value());
@@ -80,22 +91,27 @@ class DataControllerTest {
         assertEquals(1, response.getBody().size());
         assertEquals(mockPayment, response.getBody().getFirst());
 
-        verify(dataService).getPaymentsByReceiver(zkpo);
+        verify(dataService).getPaymentsByReceiver(zkpo, page, size);
     }
+
 
     @Test
     void testGetPaymentsByReceiver_NoResults() {
         String zkpo = "9876543210";
-        when(dataService.getPaymentsByReceiver(zkpo)).thenReturn(Collections.emptyList());
+        int page = 0;
+        int size = 100;
 
-        ResponseEntity<List<PaymentDto>> response = dataController.getPaymentsByReceiver(zkpo);
+        when(dataService.getPaymentsByReceiver(zkpo, page, size)).thenReturn(Collections.emptyList());
+
+        ResponseEntity<List<PaymentDto>> response = dataController.getPaymentsByReceiver(zkpo, page, size);
 
         assertNotNull(response);
         assertEquals(204, response.getStatusCode().value());
         assertNull(response.getBody());
 
-        verify(dataService).getPaymentsByReceiver(zkpo);
+        verify(dataService).getPaymentsByReceiver(zkpo, page, size);
     }
+
 
 
     @Test

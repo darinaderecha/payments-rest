@@ -4,6 +4,8 @@ import com.privat.paymentsrest.dto.ChargeCreateDto;
 import com.privat.paymentsrest.dto.ChargeDto;
 import com.privat.paymentsrest.dto.PaymentDto;
 import com.privat.paymentsrest.dto.Status;
+import com.privat.paymentsrest.exception.ChargeDeletionException;
+import com.privat.paymentsrest.exception.ChargeFetchException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -72,7 +74,7 @@ public class ChargeService {
                     Void.class
             );
         } catch (HttpClientErrorException e) {
-            throw new RuntimeException("Failed to reverse charge with ID: " + chargeId + ". Error: " + e.getResponseBodyAsString(), e);
+            throw new ChargeDeletionException("Failed to reverse charge with ID: " + chargeId + ". Error: " + e.getResponseBodyAsString(), e);
         }
     }
 
@@ -88,7 +90,7 @@ public class ChargeService {
             );
             return response.getBody();
         }catch (HttpClientErrorException e) {
-            throw new RuntimeException("Failed to fetch charges by paymentId: " + paymentId + ". Error: " + e.getResponseBodyAsString(), e);
+            throw new ChargeFetchException("Failed to fetch charges by paymentId: " + paymentId + ". Error: " + e.getResponseBodyAsString(), e);
         }
     }
 

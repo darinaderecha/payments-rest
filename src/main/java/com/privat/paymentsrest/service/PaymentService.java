@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Collections;
 import java.util.List;
+
 
 @Service
 public class PaymentService {
@@ -34,31 +36,41 @@ public class PaymentService {
             if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             } else {
-                throw new PaymentCreationException( "Failed to create payment: " + response.getStatusCode());
+                throw new PaymentCreationException("Failed to create payment: " + response.getStatusCode());
             }
         } catch (HttpClientErrorException e) {
             throw new PaymentCreationException("Error occurred while calling payment API: " + e.getResponseBodyAsString(), e);
         }
     }
 
-    public List<PaymentDto> getAll() {
-        String endpoint = serviceBaseUrl + "/v1/payments-dao/all";
+    public List<PaymentDto> getAll(int page, int size) {
+        String firstServiceEndpoint = serviceBaseUrl + "/v1/payments-dao/all?page=" + page + "&size=" + size;
+
 
         try {
             ResponseEntity<List<PaymentDto>> response = restTemplate.exchange(
-                    endpoint,
+                    firstServiceEndpoint,
                     HttpMethod.GET,
                     null,
-                    new ParameterizedTypeReference<List<PaymentDto>>() {}
+                    new ParameterizedTypeReference<List<PaymentDto>>() {
+                    }
             );
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                List<PaymentDto> payments = response.getBody();
 
-            if (response.getStatusCode().is2xxSuccessful()) {
-                return response.getBody();
+                if (payments == null || payments.isEmpty()) {
+                    return Collections.emptyList();
+                }
+
+                return payments;
+
             } else {
-                throw new PaymentFetchException("Failed to fetch payments: " + response.getStatusCode());
+               return  Collections.emptyList();
             }
-        } catch (HttpClientErrorException e) {
-            throw new PaymentFetchException("Error occurred while calling payment API: " + e.getResponseBodyAsString(), e);
+
+        } catch (Exception e) {
+            throw new PaymentFetchException("Error while fetching payments from payments-dao: " + e.getMessage(), e);
         }
     }
+
 }
